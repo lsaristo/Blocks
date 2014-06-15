@@ -1,20 +1,13 @@
- /*
- *  FILE: Solver.java
- *  WRITTEN BY: John Wilkey FOR CS47B Blocks project.
- * 
- *	NOTE: That this program requires Java version 1.7 or later to run.  
- */
 import java.io.*;
 import java.util.*;
 
-/*	
+/**	
  *	The Tray class. 
  *	This class implements the game's tray that will house Blocks
  *	(see Block class for further documentation)
  */
 class Tray implements Iterable<Tray.Block>
 {
-	/* Class memebers */
 	private int rowCount, colCount;
 	private int[][] grid;
     private String changeFromPrevious;
@@ -22,7 +15,7 @@ class Tray implements Iterable<Tray.Block>
 	private Tray previousTray;
 	private final static int EMPTY = 0;
   
-    /* 
+    /** 
      * Tray constructor.
      * POSTCONDITION: Init a new Tray with a given Scanner file
      */
@@ -41,7 +34,7 @@ class Tray implements Iterable<Tray.Block>
         if (!isOkay()) Solver.dPrint(Solver.ERROR, "** Tray Corrupted, exiting **");
     }
   
-	/*
+	/**
 	 * Tray constructor.
 	 * POSTCONDITION: Init a new Tray with the given row, col dimensions and a Scanner file. 
 	 */ 
@@ -59,7 +52,7 @@ class Tray implements Iterable<Tray.Block>
         if (!isOkay()) Solver.dPrint(Solver.ERROR, "** Tray Corrupted, exiting **");
 	}
  
-    /*
+    /**
      * Copy constructor
      */
     public Tray(Tray source) {
@@ -77,7 +70,7 @@ class Tray implements Iterable<Tray.Block>
     public int getCols() { return colCount; }
 	public int numBlocks() { return db.size(); }
 
-	/*
+	/**
 	 * Checks the Tray for consistency. 
 	 * POSTCONDITION: Returns true if the current Tray is 
 	 *	in a valid state. That is, all Blocks are within 
@@ -89,12 +82,12 @@ class Tray implements Iterable<Tray.Block>
         return true;
     }
     
-    /*
+    /**
      * Sets the pointer to the Tray from which this Tray was created.
      */
     public void setPreviousTray(Tray p) { previousTray = p ; }
 
-	/*
+	/**
 	 * Overriden hashCode() implementation. Must return the same
 	 *	value if no changes made and must agree with equals() as
 	 *	per symatics.
@@ -111,10 +104,10 @@ class Tray implements Iterable<Tray.Block>
 		return hashValue.hashCode();
 	}
    
-    /*
+    /**
      * Overrites grid with the most current information stored in the database.
      *
-     * THROWS: ArrayIndexOutOfBoundsException
+     * @throws ArrayIndexOutOfBoundsException
      */
     private void reDraw() throws ArrayIndexOutOfBoundsException {
 		grid = new int[rowCount][colCount];
@@ -124,7 +117,7 @@ class Tray implements Iterable<Tray.Block>
                     grid[b.getr() + r][b.getc() + c] = b.getId();
     }
 
-	/*
+	/**
 	 * Checks for equality of this Tray and rvalue. 
 	 *	Returns true iff their hashCode()'s are equal. 
 	 */
@@ -151,7 +144,7 @@ class Tray implements Iterable<Tray.Block>
         return isEqual;
 	}
 
-    /*
+    /**
 	 * POSTCONDITION: Visual representation of the Tray's configuration has been
      *  sent to std::out. 
 	 */
@@ -175,11 +168,11 @@ class Tray implements Iterable<Tray.Block>
         return outString;
     }
 
-	/*
+	/**
 	 * POSTCONDITION: Returns true if we can put Block b at pos [row][col] in the Tray. False if not.
 	 *	If the position is not valid for the Tray configuration, throws ArrayIndexOutOfBoundsException.
 	 *
-	 * THROWS: ArrayIndexOutOfBoundsException.
+	 * @throws ArrayIndexOutOfBoundsException.
 	 */
 	private boolean canMoveHere(int row, int col, Block b) throws ArrayIndexOutOfBoundsException
 	{
@@ -191,11 +184,11 @@ class Tray implements Iterable<Tray.Block>
 		return valid;
 	}
 
-	/*
+	/**
 	 * POSTCONDITION: If a block exists at Tray[row][col], return a reference to that Block. 
 	 *	Otherwise, throw EmptyStackException
 	 *
-	 * THROWS: EmptyStackException. 
+	 * @throws EmptyStackException. 
 	 */ 
 	public Block getBlock(int id) throws EmptyStackException {
 		for(Block b : db) 
@@ -205,7 +198,7 @@ class Tray implements Iterable<Tray.Block>
 		throw new EmptyStackException();
 	}
     
-    /*
+    /**
      * Output the sequence of changes made to the current Tray since the original 
      *  Tray was created.
      */
@@ -222,7 +215,7 @@ class Tray implements Iterable<Tray.Block>
 			Solver.dPrint(Solver.SPECIAL, history.pop());
     }
 
-	/*
+	/**
 	 * Move a Block in the current Tray.
 	 * POSTCONDITION: Returns a new Tray object as a copy of the current object except
      *  the desired Block has been moved in this new configuration by one space in the 
@@ -255,17 +248,15 @@ class Tray implements Iterable<Tray.Block>
 		catch (ArrayIndexOutOfBoundsException e) {
 			return null;
 		}
-        /* Log the change that this new Tray created from the previous tray. */
         newTray.changeFromPrevious = "" + b.getr() + " " 	+  b.getc() + " " 
 										+ (b.getr() + row_scale) + " " + (b.getc() + col_scale);
         newTray.setPreviousTray(this);
-        /* Adjust the new Tray's Block b to the correct position and reDraw(). */
         newTray.getBlock(b.getId()).setCoordinates(block_row+row_scale, block_col+col_scale);
 		newTray.isOkay();
         return newTray;
 	}
 
-	/*
+	/**
 	 * Implements the Iterable interface. 
 	 * Return a Tray::Iterator
 	 */
@@ -274,7 +265,6 @@ class Tray implements Iterable<Tray.Block>
 		return new TrayIterator(this);
 	}
 
-	/* Exposes iterator interface for the Tray class. */ 
 	class TrayIterator implements Iterator<Block>
 	{
 		private Iterator databaseIter;
@@ -293,12 +283,11 @@ class Tray implements Iterable<Tray.Block>
 			return (Block)databaseIter.next();
 		}
 
-	 	/* Remove is not supported by the Tray class. */ 
 		@Override
 		public void remove() {}
 	}
 
-	/*
+	/**
 	 *	The Block class. Inner class used by the Tray class. 
  	 *	This class implements the Blocks that will populate the game tray. 
  	 *	(see Tray clss for further documentation). 
@@ -312,7 +301,7 @@ class Tray implements Iterable<Tray.Block>
             		row_pos;
         private final int id;
 	
-		/*
+		/**
 		 * The Block class constructor. 
 		 * POSTCONDITION: A new l by w sized Block created at position col, row
 	     *	Note that the initial position determins the GUID for this Block and
@@ -326,7 +315,7 @@ class Tray implements Iterable<Tray.Block>
 			id = row + 257*col + rows % 31;
 		}
         
-        /*
+        /**
          * Copy constructor.
 		 *	Note that the GUID will remain unchaned from the original block. This
 		 *	is by design. 
@@ -339,7 +328,7 @@ class Tray implements Iterable<Tray.Block>
             col_pos = source.col_pos;
         }
         
-        /*
+        /**
          * The Block's hashCode() function. Note that the id serves as the 
          *  Block's GUID in the Tray and it's datastructures. As such, we 
          *  only need to compute the hashCode() once for each Block and never
@@ -350,7 +339,7 @@ class Tray implements Iterable<Tray.Block>
         @Override
         public int hashCode() { return id; }
 
-        /*
+        /**
          * Test two Blocks for equality. Equality in this case means that they
          *  are the same dimensions and same spacial orientation (i.e., 
          *  a 2x1 is NOT equal to a 1x2. Note that the symantics of the equals()
@@ -365,7 +354,6 @@ class Tray implements Iterable<Tray.Block>
             return this.toString().equals(other.toString());
         }
 
-		/* Public methods. Simple getters/setters */
 	    public int getNumCols() { return colCount; }
     	public int getNumRows() { return rowCount; }
     	public int getr() { return row_pos; }
@@ -373,7 +361,6 @@ class Tray implements Iterable<Tray.Block>
         public void setCoordinates(int r, int c) { row_pos = r; col_pos = c; }
         private int getId() { return id; }
 
-        /* String representation of the block. Be careful with this; it is used for equality testing. */
 		public String toString() { return "a " + rowCount + "x" + colCount + " block"; }
 	
 	} // End of the Block inner class. 
