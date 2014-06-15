@@ -48,9 +48,14 @@ public class Solver
         public void run() {
             String outString = 
                 "Report Card:\n\t\tElapsed time: " 
-                + ((System.currentTimeMillis() - startTime)/1000) + " seconds"
-                +"\n\t\tTrays Tried: " + trayCount + "\n\t\tTable Size: " 
-                + prevSize + "\n\t\tMemory Size: " + dbSize;
+                + ((System.currentTimeMillis() - startTime)/1000) 
+                + " seconds"
+                +"\n\t\tTrays Tried: " 
+                + trayCount 
+                + "\n\t\tTable Size: " 
+                + prevSize 
+                + "\n\t\tMemory Size: " 
+                + dbSize;
 
             dPrint(BENCH, outString);
         }   
@@ -87,7 +92,7 @@ public class Solver
             +"\n\t\twarn\t\tLess verbose than info. More than error"
             +"\n\t\tinfo\t\tLess verbose than debug. More than warn (implies "
             +"benchmark)"
-            +"\n\t\tsilent\t\tSuppress default program output (i.e., the move 
+            +"\n\t\tsilent\t\tSuppress default program output (i.e., the move" 
             +"list)"
             +"\n\t\tbenchmark\tInclude elapsed running time in output (implied"
             +" in info)"
