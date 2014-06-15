@@ -27,9 +27,10 @@ public class Solver
 
     /**
      * Debug inner class used to control program-wide debugging. 
-     *  Refer to debugging options given in -ooptions
+     * Refer to debugging options given in -ooptions
      */
-    private static class Debug {
+    private static class Debug 
+    {
         private static int SYSTEM_DEBUG_LEVEL = ERROR;
         private static boolean BENCH = false;
         private static boolean SILENT = false;
@@ -38,29 +39,37 @@ public class Solver
     /** 
      * TaskTimer class to implement running time statistics. 
      */ 
-    private class Periodic extends TimerTask {
+    private class Periodic extends TimerTask 
+    {
         private int trayCount = 0;
         private int prevSize = 0;
         private int dbSize = 0;
 
         public void run() {
-            dPrint(
-                BENCH, 
+            String outString = 
                 "Report Card:\n\t\tElapsed time: " 
                 + ((System.currentTimeMillis() - startTime)/1000) + " seconds"
                 +"\n\t\tTrays Tried: " + trayCount + "\n\t\tTable Size: " 
-                + prevSize + "\n\t\tMemory Size: " + dbSize
-            );
+                + prevSize + "\n\t\tMemory Size: " + dbSize;
+
+            dPrint(BENCH, outString);
         }   
     }
 
     /**
      * Constructor for the Solver class.
-     * POSTCONDITION: Set up a new Solver class to solve a puzzle.  
+     *
+     * @param startingFile Config file for the initial Tray.
+     * @param desiredFile Config file for the goal Tray.
      */
     public Solver(String startingFile, String desiredFile) {
         startingGame = createGame(startingFile);
-        desiredGame = createGame(startingGame.getRows(), startingGame.getCols(), desiredFile);
+       
+        desiredGame = createGame(
+            startingGame.getRows()
+            , startingGame.getCols()
+            , desiredFile
+        );
     }
 
     /** 
@@ -72,61 +81,73 @@ public class Solver
             "  The Blocks Solver Program"
             +"\n\tUsage: Solver.java [-ooption] [initial config] [goal config]"
             +"\n\n\tGeneral options:"
-            +"\n\t\toptions\t\tDisplays this help message\n\n\tControl Levels of Debugging Output:"
+            +"\n\t\toptions\t\tDisplays this help message\n\n\tControl Levels "
+            +"of Debugging Output:"
             +"\n\t\tdebug\t\tMost verbose output"
             +"\n\t\twarn\t\tLess verbose than info. More than error"
-            +"\n\t\tinfo\t\tLess verbose than debug. More than warn (implies benchmark)"
-            +"\n\t\tsilent\t\tSuppress default program output (i.e., the move list)"
-            +"\n\t\tbenchmark\tInclude elapsed running time in output (implied in info)"
+            +"\n\t\tinfo\t\tLess verbose than debug. More than warn (implies "
+            +"benchmark)"
+            +"\n\t\tsilent\t\tSuppress default program output (i.e., the move 
+            +"list)"
+            +"\n\t\tbenchmark\tInclude elapsed running time in output (implied"
+            +" in info)"
             +"\n\n\tAlgorithm options:"
             +"\n\t\talg #\t\tDefine nonstandard algorithm to solve the puzzle"
             +"\n\t\t\t\t\tValid algorithms:"
-            +"\n\t\t\t\t\t\tStandard depth-first (per block), first try (default)"
+            +"\n\t\t\t\t\t\tStandard depth-first (per block), first try "
+            +"(default)"
             +"\n\n  Written by: John Wilkey. CS47B\n"
-            );
+        );
     }
 
     /**
-     * Debug print routine. Prints the debugging message along with anything else that 
-     *  might be helpful at the time.
+     * Debug print routine. Prints the debugging message along with anything 
+     * else that might be helpful at the time.
      * Verbosity level range from 1 (DEBUG) to 4 (ERROR) 
+     *
+     * @param level Severity level of this message.
+     * @param message Debug message to write. :w
      */
     static void dPrint(int level, String message) {
-            String LevelMeaning = "";
-            switch (level) {
-                case 1: 
-                    LevelMeaning = "DEBUG";
-                    break;
-                case 2: 
-                    LevelMeaning = "INFO";
-                    break;
-                case 3: 
-                    LevelMeaning = "INFO";
-                    break;
-                case 4: 
-                    LevelMeaning = "WARN";
-                    break;
-                case 5: 
-                    LevelMeaning = "ERROR";
-                    break;  
-            }
-            
-            boolean cond1 = level .= Debug.SYSTEM_DEBUG_LEVEL;
-            boolean cond2 = level == BENCH && Debug.BENCH;
+        String LevelMeaning = "";
+        switch (level) {
+            case 1: 
+                LevelMeaning = "DEBUG";
+                break;
+            case 2: 
+                LevelMeaning = "INFO";
+                break;
+            case 3: 
+                LevelMeaning = "INFO";
+                break;
+            case 4: 
+                LevelMeaning = "WARN";
+                break;
+            case 5: 
+                LevelMeaning = "ERROR";
+                break;  
+        }
+        
+        boolean cond1 = level == Debug.SYSTEM_DEBUG_LEVEL;
+        boolean cond2 = level == BENCH && Debug.BENCH;
+        boolean cond3 = level == SPECIAL && !Debug.SILENT;
 
-            if(cond1 || cond2) 
-                System.out.println("[ " + LevelMeaning + " ]: " +  message); 
-            else if (level == SPECIAL && !Debug.SILENT)
-                System.out.println(message);
+        if (cond1 || cond2) {
+            System.out.println("[ " + LevelMeaning + " ]: " +  message); 
+        } else if (cond3) {
+            System.out.println(message);
+        }
     }
     
     /**
      *  Read the configuration file provided in program arguments
-     *  generate a new instance of a game Tray and populate that tray with Block(s) as 
-     *  stipulated in the configuration file.
+     *  generate a new instance of a game Tray and populate that tray with 
+     *  Block(s) as stipulated in the configuration file.
      *  
      *  PRECONDITION: startingConfig contains valid Tray and Block descriptions. 
      *  POSTCONDITION: Returns a new Tray populatd with Block(s). 
+     *
+     * @param config Path to configuration file to read from. 
      */
     static private Tray createGame(String config) { 
         Tray game = null;
@@ -135,9 +156,16 @@ public class Solver
             game = new Tray(new Scanner(new BufferedReader(new FileReader(config)))); 
         } catch (IOException e) { 
             dPrint(ERROR, "Reached unexpectd end of configuration file");
+            return null;
         }
 
-        dPrint(INFO, "Game has been created with the hash " + game.hashCode() + " and following configuration...\n" + game);
+        String debugString = 
+            "Game has been created with the hash " 
+            + game.hashCode() 
+            + " and following configuration...\n" 
+            + game;
+
+        dPrint(INFO, debugString); 
         return game;        
     }
 
@@ -148,10 +176,17 @@ public class Solver
             game = new Tray(row, col, new Scanner(new BufferedReader(new FileReader(config)))); 
         } catch (IOException e) { 
             dPrint(ERROR, "Reached unexpectd end of configuration file"); 
+            return null;
         }
 
-        dPrint(INFO, "Game has been created with the hash " + game.hashCode() + " and following configuration...\n" + game);
-        return game;
+        String debugString = 
+            "Game has been created with the hash " 
+            + game.hashCode() 
+            + " and following configuration...\n" 
+            + game;
+
+        dPrint(INFO, debugString); 
+        return game;        
     }
 
     /**
@@ -165,27 +200,35 @@ public class Solver
             int index = 0;
             while (args[index].charAt(0) == '-') {
                 switch (args[index]) {
-                    case "-ooptions":   showHelp();
-                                        return -2;
-                    case "-odebug":     Debug.SYSTEM_DEBUG_LEVEL = DEBUG;
-                                        dPrint(DEBUG, "** Debug level: DEBUG **");
-                                        break;
-                    case "-oinfo":      Debug.SYSTEM_DEBUG_LEVEL = INFO;
-                                        dPrint(INFO, "** Debug level: INFO **");
-                                        break;
-                    case "-owarn":      Debug.SYSTEM_DEBUG_LEVEL = WARN;
-                                        dPrint(WARN, "**  Debug level: WARN **");
-                                        break;
-                    case "-osilent":    Debug.SILENT = true;
-                                        dPrint(INFO, "** Supressing move list output **");
-                                        break;
-                    case "-obenchmark": Debug.BENCH = true;
-                                        break;
-                    case "-oalg":       index++;
-                                        SOLVER_ALG = new Integer(args[index]);
-                                        break;
-                    default:            dPrint(ERROR, "Unrecognized option, bail");
-                                        return -1;
+                    case "-ooptions":   
+                        showHelp();
+                        return -2;
+                    case "-odebug":     
+                        Debug.SYSTEM_DEBUG_LEVEL = DEBUG;
+                        dPrint(DEBUG, "** Debug level: DEBUG **");
+                        break;
+                    case "-oinfo":      
+                        Debug.SYSTEM_DEBUG_LEVEL = INFO;
+                        dPrint(INFO, "** Debug level: INFO **");
+                        break;
+                    case "-owarn":      
+                        Debug.SYSTEM_DEBUG_LEVEL = WARN;
+                        dPrint(WARN, "**  Debug level: WARN **");
+                        break;
+                    case "-osilent":    
+                        Debug.SILENT = true;
+                        dPrint(INFO, "** Supressing move list output **");
+                        break;
+                    case "-obenchmark": 
+                        Debug.BENCH = true;
+                        break;
+                    case "-oalg":       
+                        index++;
+                        SOLVER_ALG = new Integer(args[index]);
+                        break;
+                    default:            
+                        dPrint(ERROR, "Unrecognized option, bail");
+                        return -1;
                 }
                 ++index;    
             }
@@ -205,24 +248,32 @@ public class Solver
      * Note that this is really just a wrapper method for calling the requested
      *  solving algorithm defined in showHelp()
      * POSTCONDITION: Returns true if a solution is found, false otherwise. 
+     *
+     * @param currentTray Tray to solve.
      */
     private boolean solvePuzzle(Tray currentTray) {
         switch (SOLVER_ALG) {
-            default:    dPrint(INFO, "Using default solver algorithm"); 
-                        return algorithm_1(currentTray);
+            default:    
+                dPrint(INFO, "Using default solver algorithm"); 
+                return algorithm_1(currentTray);
         }
     }
 
+    /**
+     * A Depth First Search (DFS) solving algorithm. 
+     *
+     * @param currentTray Tray to solve. 
+     */
     private boolean algorithm_1(Tray currentTray) {
         HashSet<Tray> memory = new HashSet<Tray>();
         Deque<Tray> previousTrays = new ArrayDeque<Tray>();
-            previousTrays.add(currentTray);
+        previousTrays.add(currentTray);
         
         AbstractList<String> directions = new ArrayList<String>();
-            directions.add("u");
-            directions.add("d");
-            directions.add("l");
-            directions.add("r");
+        directions.add("u");
+        directions.add("d");
+        directions.add("l");
+        directions.add("r");
 
         Timer t = new Timer();
         Periodic task = new Periodic();
@@ -230,7 +281,7 @@ public class Solver
 
         for(int i = 0 ; previousTrays.size() > 0; ) {
             if( currentTray.equals(desiredGame) ) {
-                dPrint(INFO, "*** SUCCESS *** We found a solution to the puzzle!\n"+currentTray);
+                dPrint(INFO, "*** SUCCESS *** Solutio Found!\n"+currentTray);
                 currentTray.changeLog();
                 return true;
             }
@@ -238,6 +289,7 @@ public class Solver
             for(Tray.Block block : currentTray) {
                 for(String direction : directions) { 
                     Tray newTray = currentTray.moveBlock(block, direction);
+                    
                     if(newTray != null && !memory.contains(newTray)) {
                         newTray.setPreviousTray(currentTray);
                         previousTrays.push(newTray);
@@ -267,8 +319,9 @@ public class Solver
             dPrint(ERROR,"Not enough arguments"); 
         }
 
-        if(keepGoing < 0)
+        if(keepGoing < 0) {
             System.exit(-1);
+        }
 
         try { 
             game = new Solver(startingConfig, endingConfig); 
@@ -279,12 +332,23 @@ public class Solver
 
         game.startTime = System.currentTimeMillis();
         if(!game.solvePuzzle(game.startingGame)) {
-            dPrint(WARN, "***** SORRY ****** I could not find a solution to the puzzle :( ");
-            dPrint(BENCH, "Elapsed time spent on puzzle: " + ((System.currentTimeMillis() - game.startTime)/1000) + " seconds");
+            dPrint(WARN, "***** SORRY ****** Could not find a solution");
+
+            String timeString = 
+                "Elapsed time: " 
+                + ((System.currentTimeMillis() - game.startTime)/1000) 
+                + " seconds";
+            
+            dPrint(BENCH, timeString); 
             System.exit(-1);
         }
 
-        dPrint(BENCH, "Solved the puzzle in " + ((System.currentTimeMillis() - game.startTime)/1000) + " seconds");
+        String timeString = 
+            "Solved the puzzle in " 
+            + ((System.currentTimeMillis() - game.startTime)/1000) 
+            + " seconds";
+
+        dPrint(BENCH, timeString);
         System.exit(0);
     } // End of main
 } // End of Solver class
