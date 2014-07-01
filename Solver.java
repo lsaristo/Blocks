@@ -2,9 +2,12 @@ import java.io.*;
 import java.util.*;
 
 /**
- *  The Solver class.
- *  This is the driver class for the game. 
- *  Refer to Tray.java for Tray and Blocks implementation.
+ * The Solver class.
+ * This is the driver class for the game. 
+ *
+ * @author John Wilkey
+ * @version 1.0
+ * @see Tray.java for Tray and Blocks implementation.
  */
 public class Solver
 {
@@ -25,7 +28,7 @@ public class Solver
     private Tray startingGame;
     private Tray desiredGame;
 
-    /**
+    /*
      * Debug inner class used to control program-wide debugging. 
      * Refer to debugging options given in -ooptions
      */
@@ -36,7 +39,7 @@ public class Solver
         private static boolean SILENT = false;
     }
         
-    /** 
+    /* 
      * TaskTimer class to implement running time statistics. 
      */ 
     private class Periodic extends TimerTask 
@@ -45,7 +48,8 @@ public class Solver
         private int prevSize = 0;
         private int dbSize = 0;
 
-        public void run() {
+        public void run()
+	    {
             String outString = 
                 "Report Card:\n\t\tElapsed time: " 
                 + ((System.currentTimeMillis() - startTime)/1000) 
@@ -67,9 +71,9 @@ public class Solver
      * @param startingFile Config file for the initial Tray.
      * @param desiredFile Config file for the goal Tray.
      */
-    public Solver(String startingFile, String desiredFile) {
+    public Solver(String startingFile, String desiredFile)
+	{
         startingGame = createGame(startingFile);
-       
         desiredGame = createGame(
             startingGame.getRows()
             , startingGame.getCols()
@@ -77,11 +81,12 @@ public class Solver
         );
     }
 
-    /** 
+    /* 
      * Prints the help message then exits. 
      * Enabled with program argument of -ooptions.
      */
-    static void showHelp() {
+    static void showHelp()
+	{
         System.out.println(
             "  The Blocks Solver Program"
             +"\n\tUsage: Solver.java [-ooption] [initial config] [goal config]"
@@ -105,7 +110,7 @@ public class Solver
         );
     }
 
-    /**
+    /*
      * Debug print routine. Prints the debugging message along with anything 
      * else that might be helpful at the time.
      * Verbosity level range from 1 (DEBUG) to 4 (ERROR) 
@@ -113,7 +118,8 @@ public class Solver
      * @param level Severity level of this message.
      * @param message Debug message to write. :w
      */
-    static void dPrint(int level, String message) {
+    static void dPrint(int level, String message)
+	{
         String LevelMeaning = "";
         switch (level) {
             case 1: 
@@ -144,17 +150,15 @@ public class Solver
         }
     }
     
-    /**
-     *  Read the configuration file provided in program arguments
-     *  generate a new instance of a game Tray and populate that tray with 
-     *  Block(s) as stipulated in the configuration file.
-     *  
-     *  PRECONDITION: startingConfig contains valid Tray and Block descriptions. 
-     *  POSTCONDITION: Returns a new Tray populatd with Block(s). 
-     *
+    /*
+     * Read the configuration file provided in program arguments
+     * generate a new instance of a game Tray and populate that tray with 
+     * Block(s) as stipulated in the configuration file.
+     * 
      * @param config Path to configuration file to read from. 
      */
-    static private Tray createGame(String config) { 
+    static private Tray createGame(String config)
+	{ 
         Tray game = null;
 
         try { 
@@ -174,7 +178,16 @@ public class Solver
         return game;        
     }
 
-    static private Tray createGame(int row, int col, String config) {
+    /*
+     * Generate a new game.
+     *
+     * @param row Row dimension of the new Tray.
+     * @param col Col dimension of the new Tray.
+     * @param config File to read starting board config from.
+     * @returns newly-created Tray.
+     */
+    static private Tray createGame(int row, int col, String config)
+	{
         Tray game = null;
         
         try { 
@@ -194,47 +207,48 @@ public class Solver
         return game;        
     }
 
-    /**
+    /*
      * Process command-line arguments given to the program at runtime. 
      * Refer to -ooptions for argument descriptions.
      * 
      * @throws NullPointerException
      */
-    static private int processArgs(String[] args) throws NullPointerException {
+    static private int processArgs(String[] args) throws NullPointerException 
+    {
         try {
             int index = 0;
             while (args[index].charAt(0) == '-') {
-                switch (args[index]) {
-                    case "-ooptions":   
-                        showHelp();
-                        return -2;
-                    case "-odebug":     
-                        Debug.SYSTEM_DEBUG_LEVEL = DEBUG;
-                        dPrint(DEBUG, "** Debug level: DEBUG **");
-                        break;
-                    case "-oinfo":      
-                        Debug.SYSTEM_DEBUG_LEVEL = INFO;
-                        dPrint(INFO, "** Debug level: INFO **");
-                        break;
-                    case "-owarn":      
-                        Debug.SYSTEM_DEBUG_LEVEL = WARN;
-                        dPrint(WARN, "**  Debug level: WARN **");
-                        break;
-                    case "-osilent":    
-                        Debug.SILENT = true;
-                        dPrint(INFO, "** Supressing move list output **");
-                        break;
-                    case "-obenchmark": 
-                        Debug.BENCH = true;
-                        break;
-                    case "-oalg":       
-                        index++;
-                        SOLVER_ALG = new Integer(args[index]);
-                        break;
-                    default:            
-                        dPrint(ERROR, "Unrecognized option, bail");
-                        return -1;
-                }
+               switch (args[index]) {
+                   case "-ooptions":   
+                       showHelp();
+                       return -2;
+                   case "-odebug":     
+                       Debug.SYSTEM_DEBUG_LEVEL = DEBUG;
+                       dPrint(DEBUG, "** Debug level: DEBUG **");
+                       break;
+                   case "-oinfo":      
+                       Debug.SYSTEM_DEBUG_LEVEL = INFO;
+                       dPrint(INFO, "** Debug level: INFO **");
+                       break;
+                   case "-owarn":      
+                       Debug.SYSTEM_DEBUG_LEVEL = WARN;
+                       dPrint(WARN, "**  Debug level: WARN **");
+                       break;
+                   case "-osilent":    
+                       Debug.SILENT = true;
+                       dPrint(INFO, "** Supressing move list output **");
+                       break;
+                   case "-obenchmark": 
+                       Debug.BENCH = true;
+                       break;
+                   case "-oalg":       
+                       index++;
+                       SOLVER_ALG = new Integer(args[index]);
+                       break;
+                   default:            
+                       dPrint(ERROR, "Unrecognized option, bail");
+                       return -1;
+               }
                 ++index;    
             }
             startingConfig = args[index];
@@ -248,7 +262,7 @@ public class Solver
     }
 
 
-    /**
+    /*
      * (Attempt to) solve the current puzzle.
      * Note that this is really just a wrapper method for calling the requested
      *  solving algorithm defined in showHelp()
@@ -256,7 +270,8 @@ public class Solver
      *
      * @param currentTray Tray to solve.
      */
-    private boolean solvePuzzle(Tray currentTray) {
+    private boolean solvePuzzle(Tray currentTray)
+	{
         switch (SOLVER_ALG) {
             default:    
                 dPrint(INFO, "Using default solver algorithm"); 
@@ -264,12 +279,13 @@ public class Solver
         }
     }
 
-    /**
+    /*
      * A Depth First Search (DFS) solving algorithm. 
      *
      * @param currentTray Tray to solve. 
      */
-    private boolean algorithm_1(Tray currentTray) {
+    private boolean algorithm_1(Tray currentTray)
+	{
         HashSet<Tray> memory = new HashSet<Tray>();
         Deque<Tray> previousTrays = new ArrayDeque<Tray>();
         previousTrays.add(currentTray);
@@ -314,7 +330,8 @@ public class Solver
     /**
      * Program entry point.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args)
+	{
         Solver game = null;
         int keepGoing = 0;
         
