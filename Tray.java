@@ -82,18 +82,25 @@ class Tray implements Iterable<Tray.Block>
      * Return the number of rows of this Tray.
      */ 
     public int getRows()
-	{ return rowCount; }
+	{ 
+        return rowCount; 
+    }
 
     /*
      * Return the number of columns of this Tray.
      */
-    public int getCols() { return colCount; }
+    public int getCols() 
+    { 
+        return colCount; 
+    }
 
     /*
      * Return the number of Blocks in the Tray.
      */
     public int numBlocks()
-	{ return db.size(); }
+	{ 
+        return db.size(); 
+    }
 
     /*
      * Checks the Tray for consistency. 
@@ -103,13 +110,13 @@ class Tray implements Iterable<Tray.Block>
      *
      * @throws IllegalStateException
      */
-    public boolean isOkay() throws IllegalStateException {
+    public boolean isOkay() throws IllegalStateException 
+    {
         try {
             reDraw();
         } catch (ArrayIndexOutOfBoundsException e) { 
             return false; 
         }
-
         return true;
     }
     
@@ -148,7 +155,8 @@ class Tray implements Iterable<Tray.Block>
      *
      * @throws ArrayIndexOutOfBoundsException
      */
-    private void reDraw() throws ArrayIndexOutOfBoundsException {
+    private void reDraw() throws ArrayIndexOutOfBoundsException 
+    {
         grid = new int[rowCount][colCount];
         
         for(Block b : db) {
@@ -178,7 +186,8 @@ class Tray implements Iterable<Tray.Block>
                     try {
                         boolean isEmpty = grid[r][c] != EMPTY;
                         Block sourceBlock = getBlock(grid[r][c]);
-                        Block desiredBlock = desiredTray.getBlock(desiredTray.grid[r][c]);
+                        Block desiredBlock = 
+                            desiredTray.getBlock(desiredTray.grid[r][c]);
                         
                         isEqual = 
                             isEqual 
@@ -245,7 +254,7 @@ class Tray implements Iterable<Tray.Block>
      * @see Block class. 
      */
     private boolean canMoveHere(int row, int col, Block b) 
-        throws ArrayIndexOutOfBoundsException 
+            throws ArrayIndexOutOfBoundsException 
     {
         boolean valid = true;
         
@@ -272,7 +281,6 @@ class Tray implements Iterable<Tray.Block>
                 return b;
             }
         }
-
         String errorMessage = 
             "Could not find Block id " 
             + id 
@@ -283,8 +291,8 @@ class Tray implements Iterable<Tray.Block>
     }
     
     /*
-     * Output the sequence of changes made to the current Tray since the original 
-     * Tray was created.
+     * Output the sequence of changes made to the current Tray since the
+     * original Tray was created.
      */
     public void changeLog()
 	{
@@ -295,7 +303,6 @@ class Tray implements Iterable<Tray.Block>
             history.push(dummy.changeFromPrevious);
             dummy = dummy.previousTray;
         }
-        
         while(history.size() > 0) {
             Solver.dPrint(Solver.SPECIAL, history.pop());
         }
@@ -303,12 +310,12 @@ class Tray implements Iterable<Tray.Block>
 
     /*
      * Move a Block in the current Tray.
-     * POSTCONDITION: Returns a new Tray object as a copy of the current object except
-     * the desired Block has been moved in this new configuration by one space in the 
-     * desired direction. If the move is not allowed, return null.
      * 
      * @param b Block to be moved.
      * @param direction. Valid directions "u", "d", "l", "r".
+     * @returns a new Tray object as a copy of the current object except the
+     * desired Block has been moved in this new configuration by one space in
+     * the desired direction. If the move is not allowed, return null.
      */ 
     public Tray moveBlock(Block b, String direction)
 	{
@@ -336,19 +343,12 @@ class Tray implements Iterable<Tray.Block>
             return null;
         }
 
-        newTray.changeFromPrevious =
-            ""
-            + b.getr() 
-            + " "
-            + b.getc() 
-            + " " 
-            + (b.getr() 
-            + row_scale) 
-            + " " 
-            + (b.getc() + col_scale);
+        newTray.changeFromPrevious = "" + b.getr() + " " + b.getc() + " " 
+            + (b.getr() + row_scale) + " " + (b.getc() + col_scale);
 
         newTray.setPreviousTray(this);
-        newTray.getBlock(b.getId()).setCoordinates(block_row+row_scale, block_col+col_scale);
+        newTray.getBlock(b.getId()).setCoordinates(block_row+row_scale, 
+            block_col+col_scale);
         newTray.isOkay();
         return newTray;
     }
@@ -424,8 +424,8 @@ class Tray implements Iterable<Tray.Block>
         
         /*
          * Copy constructor.
-         *  Note that the GUID will remain unchaned from the original block. This
-         *  is by design. 
+         * Note that the GUID will remain unchaned from the original block. This
+         * is by design. 
          *
          * @param source Block to copy. 
          */
@@ -534,15 +534,7 @@ class Tray implements Iterable<Tray.Block>
         @Override
         public String toString()
 	    { 
-            String outValue = 
-                 "a " 
-                 + rowCount 
-                 + "x" 
-                 + colCount 
-                 + " block"; 
-
-            return outValue;
+            return "a " + rowCount + "x" + colCount + " block"; 
         }
-    
     } // End of the Block inner class. 
 } // End of the ray class

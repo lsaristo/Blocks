@@ -49,7 +49,7 @@ public class Solver
         private int dbSize = 0;
 
         public void run()
-	    {
+        {
             String outString = 
                 "Report Card:\n\t\tElapsed time: " 
                 + ((System.currentTimeMillis() - startTime)/1000) 
@@ -60,7 +60,6 @@ public class Solver
                 + prevSize 
                 + "\n\t\tMemory Size: " 
                 + dbSize;
-
             dPrint(BENCH, outString);
         }   
     }
@@ -72,12 +71,12 @@ public class Solver
      * @param desiredFile Config file for the goal Tray.
      */
     public Solver(String startingFile, String desiredFile)
-	{
+    {
         startingGame = createGame(startingFile);
         desiredGame = createGame(
-            startingGame.getRows()
-            , startingGame.getCols()
-            , desiredFile
+            startingGame.getRows(), 
+            startingGame.getCols(), 
+            desiredFile
         );
     }
 
@@ -86,7 +85,7 @@ public class Solver
      * Enabled with program argument of -ooptions.
      */
     static void showHelp()
-	{
+    {
         System.out.println(
             "  The Blocks Solver Program"
             +"\n\tUsage: Solver.java [-ooption] [initial config] [goal config]"
@@ -119,7 +118,7 @@ public class Solver
      * @param message Debug message to write. :w
      */
     static void dPrint(int level, String message)
-	{
+    {
         String LevelMeaning = "";
         switch (level) {
             case 1: 
@@ -158,7 +157,7 @@ public class Solver
      * @param config Path to configuration file to read from. 
      */
     static private Tray createGame(String config)
-	{ 
+    { 
         Tray game = null;
 
         try { 
@@ -187,7 +186,7 @@ public class Solver
      * @returns newly-created Tray.
      */
     static private Tray createGame(int row, int col, String config)
-	{
+    {
         Tray game = null;
         
         try { 
@@ -271,7 +270,7 @@ public class Solver
      * @param currentTray Tray to solve.
      */
     private boolean solvePuzzle(Tray currentTray)
-	{
+    {
         switch (SOLVER_ALG) {
             default:    
                 dPrint(INFO, "Using default solver algorithm"); 
@@ -285,7 +284,7 @@ public class Solver
      * @param currentTray Tray to solve. 
      */
     private boolean algorithm_1(Tray currentTray)
-	{
+    {
         HashSet<Tray> memory = new HashSet<Tray>();
         Deque<Tray> previousTrays = new ArrayDeque<Tray>();
         previousTrays.add(currentTray);
@@ -331,7 +330,7 @@ public class Solver
      * Program entry point.
      */
     public static void main(String[] args)
-	{
+    {
         Solver game = null;
         int keepGoing = 0;
         
